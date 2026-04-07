@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<%- include('partials/head') %>
+<body class="min-h-screen bg-slate-900 flex items-center justify-center p-4">
+  <div class="w-full max-w-md">
+    <div class="glass-card rounded-2xl p-8 border border-white/10">
+      <div class="text-center mb-8">
+        <div class="w-24 h-24 mx-auto mb-4 rounded-2xl flex items-center justify-center" style="background: linear-gradient(135deg, #10b981, #059669);">
+          <img src="/masjid-logo.svg" alt="Masjid Logo" class="w-16 h-16">
+        </div>
+        <h1 class="text-2xl font-bold text-white mb-1">Welcome Back</h1>
+        <p class="text-slate-400">Sign in to Masjid Community Center</p>
+      </div>
+      <% if (error) { %>
+        <div class="bg-red-500/20 border border-red-500/30 text-red-400 px-4 py-3 rounded-lg mb-6 text-sm">
+          <%= error %>
+        </div>
+      <% } %>
+      <form action="/login" method="POST" class="space-y-5">
+        <div>
+          <label class="block text-slate-300 text-sm font-medium mb-2">Email Address</label>
+          <input type="email" name="email" required class="w-full rounded-lg px-4 py-3 bg-slate-800/50 border border-white/10 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-all" placeholder="you@example.com">
+        </div>
+        <div>
+          <label class="block text-slate-300 text-sm font-medium mb-2">Password</label>
+          <input type="password" name="password" required class="w-full rounded-lg px-4 py-3 bg-slate-800/50 border border-white/10 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-all" placeholder="Enter your password">
+        </div>
+        <button type="submit" class="w-full bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-600 hover:to-emerald-700 text-white font-semibold py-3 rounded-lg transition-all hover:shadow-lg hover:shadow-emerald-500/25 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2 focus:ring-offset-slate-900">
+          Sign In
+        </button>
+      </form>
+      <div class="mt-6 pt-6 border-t border-white/10">
+        <button onclick="guestLogin()" class="w-full bg-slate-800 hover:bg-slate-700 text-slate-300 font-semibold py-3 rounded-lg transition-all focus:outline-none focus:ring-2 focus:ring-slate-600 focus:ring-offset-2 focus:ring-offset-slate-900">
+          Continue as Guest
+        </button>
+      </div>
+    </div>
+    <p class="text-center text-slate-500 text-xs mt-6">Masjid Community Center Management System</p>
+  </div>
+  <script>
+    async function guestLogin() {
+      try {
+        const response = await fetch('/login/guest', { method: 'GET', credentials: 'same-origin' });
+        if (response.redirected) {
+          window.location.href = response.url;
+        } else {
+          window.location.href = '/dashboard';
+        }
+      } catch (e) {
+        window.location.href = '/dashboard';
+      }
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<%- include('partials/head') %>
+<body class="min-h-screen bg-slate-900">
+  <%- include('partials/sidebar') %>
+  
+  <div class="lg:pl-64 min-h-screen">
+    <header class="glass sticky top-0 z-30 border-b border-white/10">
+      <div class="flex items-center justify-between px-4 py-4">
+        <div class="flex items-center">
+          <button onclick="toggleSidebar()" class="lg:hidden mr-4 text-slate-300 hover:text-white">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+          </button>
+          <h1 class="text-2xl font-bold text-white">Events</h1>
+        </div>
+        <% if (canCreate) { %>
+          <button onclick="document.getElementById('add-form').classList.toggle('hidden')" class="bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-600 hover:to-emerald-700 text-white px-4 py-2 rounded-lg font-medium transition-all flex items-center shadow-lg shadow-emerald-500/25">
+            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+            New Event
+          </button>
+        <% } %>
+      </div>
+    </header>
+    
+    <main class="p-4 lg:p-6">
+      <% if (canCreate) { %>
+        <div id="add-form" class="hidden glass-card rounded-xl p-6 mb-6 border border-white/10 animate-slide-up">
+          <h3 class="text-lg font-semibold text-white mb-4 flex items-center">
+            <svg class="w-5 h-5 mr-2 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+            Create Event
+          </h3>
+          <form action="/events" method="POST" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div class="md:col-span-2">
+              <input type="text" name="title" required placeholder="Event Title" class="w-full rounded-lg px-4 py-3 bg-slate-800/50 border border-white/10 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-emerald-500">
+            </div>
+            <div>
+              <input type="date" name="event_date" required class="w-full rounded-lg px-4 py-3 bg-slate-800/50 border border-white/10 text-white focus:outline-none focus:ring-2 focus:ring-emerald-500">
+            </div>
+            <div>
+              <input type="text" name="location" placeholder="Location" class="w-full rounded-lg px-4 py-3 bg-slate-800/50 border border-white/10 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-emerald-500">
+            </div>
+            <div>
+              <select name="signup_type" class="w-full rounded-lg px-4 py-3 bg-slate-800/50 border border-white/10 text-white focus:outline-none focus:ring-2 focus:ring-emerald-500">
+                <option value="none">No Signup Required</option>
+                <option value="volunteer">Volunteer Signup Only</option>
+                <option value="attendee">Attendee Registration Only</option>
+                <option value="both">Both Volunteer & Attendee</option>
+              </select>
+            </div>
+            <div>
+              <div class="flex gap-2">
+                <input type="number" name="max_volunteers" placeholder="Max Volunteers" min="0" class="w-1/2 rounded-lg px-4 py-3 bg-slate-800/50 border border-white/10 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-emerald-500">
+                <input type="number" name="max_attendees" placeholder="Max Attendees" min="0" class="w-1/2 rounded-lg px-4 py-3 bg-slate-800/50 border border-white/10 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-emerald-500">
+              </div>
+            </div>
+            <div class="md:col-span-2">
+              <textarea name="description" placeholder="Description" rows="3" class="w-full rounded-lg px-4 py-3 bg-slate-800/50 border border-white/10 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-emerald-500"></textarea>
+            </div>
+            <div class="md:col-span-2 flex space-x-4">
+              <button type="submit" class="bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-600 hover:to-emerald-700 text-white px-6 py-2 rounded-lg font-medium transition-all">Create</button>
+              <button type="button" onclick="document.getElementById('add-form').classList.add('hidden')" class="bg-slate-700 hover:bg-slate-600 text-slate-300 px-6 py-2 rounded-lg font-medium transition-colors">Cancel</button>
+            </div>
+          </form>
+        </div>
+      <% } %>
+      
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-6">
+        <% events.forEach((e, i) => { %>
+          <div class="glass-card rounded-xl p-5 border border-white/10 card-hover animate-slide-up" style="animation-delay: <%= i * 0.05 %>s">
+            <div class="flex justify-between items-start mb-3">
+              <div class="flex items-center">
+                <div class="w-10 h-10 rounded-lg bg-amber-500/20 flex items-center justify-center mr-3 border border-amber-500/30">
+                  <svg class="w-5 h-5 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+                </div>
+                <h3 class="text-lg font-semibold text-white"><%= e.title %></h3>
+              </div>
+              <% if (canCreate) { %>
+                <form action="/events/<%= e.id %>/delete" method="POST" onsubmit="return confirm('Delete this event?');">
+                  <button type="submit" class="bg-red-500/20 hover:bg-red-500/30 text-red-400 px-2 py-1 rounded text-xs font-medium transition-colors border border-red-500/30">X</button>
+                </form>
+              <% } %>
+            </div>
+            <p class="text-slate-400 text-sm mb-4"><%= e.description || 'No description' %></p>
+            <div class="flex items-center text-sm text-slate-400 mb-4">
+              <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+              <%= new Date(e.event_date).toLocaleDateString() %>
+              <svg class="w-4 h-4 ml-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/></svg>
+              <%= e.location || 'TBD' %>
+            </div>
+            <div class="flex items-center justify-between">
+              <div class="flex gap-2">
+                <% if (e.signup_type === 'volunteer' || e.signup_type === 'both') { %>
+                  <span class="bg-amber-500/20 text-amber-400 px-3 py-1 rounded-full text-sm font-medium flex items-center border border-amber-500/30">
+                    <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
+                    <%= e.volunteer_count || 0 %>
+                  </span>
+                <% } %>
+                <% if (e.signup_type === 'attendee' || e.signup_type === 'both') { %>
+                  <span class="bg-emerald-500/20 text-emerald-400 px-3 py-1 rounded-full text-sm font-medium flex items-center border border-emerald-500/30">
+                    <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+                    <%= e.attendee_count || 0 %>
+                  </span>
+                <% } %>
+              </div>
+              <div class="flex gap-2">
+                <% if ((e.signup_type === 'volunteer' || e.signup_type === 'both') && role === 'volunteer') { %>
+                  <% const isVolunteering = myVolunteering.includes(e.id); %>
+                  <form action="/events/<%= e.id %>/volunteer" method="POST">
+                    <button type="submit" class="<%= isVolunteering ? 'bg-amber-600' : 'bg-amber-500 hover:bg-amber-600' %> text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors">
+                      <%= isVolunteering ? 'Volunteering' : 'Volunteer' %>
+                    </button>
+                  </form>
+                <% } %>
+                <% if ((e.signup_type === 'attendee' || e.signup_type === 'both') && role === 'volunteer') { %>
+                  <% const isAttending = myAttendance.includes(e.id); %>
+                  <% if (isAttending) { %>
+                    <span class="bg-emerald-500 text-white px-4 py-2 rounded-lg text-sm font-medium">You signed up</span>
+                  <% } else { %>
+                    <form action="/events/<%= e.id %>/attend" method="POST">
+                      <button type="submit" class="bg-emerald-500 hover:bg-emerald-600 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors">Register</button>
+                    </form>
+                  <% } %>
+                <% } %>
+              </div>
+            </div>
+            <p class="text-slate-500 text-xs mt-3">By <%= e.creator_name %></p>
+          </div>
+        <% }) %>
+        <% if (events.length === 0) { %>
+          <div class="md:col-span-3 glass-card rounded-xl p-8 text-center border border-white/10">
+            <svg class="w-12 h-12 mx-auto text-slate-600 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+            <p class="text-slate-400">No events created yet.</p>
+          </div>
+        <% } %>
+      </div>
+    </main>
+  </div>
+</body>
+</html>

@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<%- include('partials/head') %>
+<body class="min-h-screen bg-slate-900 text-slate-100">
+  <%- include('partials/sidebar') %>
+  
+  <div class="lg:pl-64 min-h-screen">
+    <header class="text-white shadow-lg" style="background: linear-gradient(135deg, #0f172a, #1e293b);">
+      <div class="flex items-center justify-between px-6 py-5">
+        <div class="flex items-center">
+          <button onclick="toggleSidebar()" class="lg:hidden mr-4 text-white/80 hover:text-white">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+          </button>
+          <div>
+            <h1 class="text-2xl font-bold">Dashboard</h1>
+            <p class="text-slate-400 text-sm mt-1"><%= new Date().toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }) %></p>
+          </div>
+        </div>
+        <div class="flex items-center space-x-3">
+          <span class="bg-emerald-500/20 text-emerald-400 px-3 py-1 rounded-full text-sm capitalize border border-emerald-500/30"><%= role %></span>
+        </div>
+      </div>
+    </header>
+    
+    <main class="p-6 lg:p-8">
+      <div class="mb-8">
+        <h2 class="text-2xl font-bold text-white">Welcome back, <span class="gradient-text"><%= user?.name %></span></h2>
+        <p class="text-slate-400 mt-1">Here's what's happening at your mosque today.</p>
+      </div>
+
+      <!-- Stats Cards -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        <div class="glass-card card-hover p-6 rounded-2xl animate-fade-in">
+          <div class="flex items-center justify-between">
+            <div>
+              <p class="text-slate-400 text-sm font-medium">Total Members</p>
+              <p class="text-3xl font-bold text-white mt-2"><%= stats.totalUsers %></p>
+            </div>
+            <div class="w-14 h-14 rounded-2xl flex items-center justify-center" style="background: linear-gradient(135deg, #10b981, #059669);">
+              <svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+            </div>
+          </div>
+        </div>
+        
+        <div class="glass-card card-hover p-6 rounded-2xl animate-fade-in" style="animation-delay: 0.1s">
+          <div class="flex items-center justify-between">
+            <div>
+              <p class="text-slate-400 text-sm font-medium">Today's Prayers</p>
+              <p class="text-3xl font-bold text-white mt-2">5</p>
+            </div>
+            <div class="w-14 h-14 rounded-2xl flex items-center justify-center" style="background: linear-gradient(135deg, #d4af37, #b8962e);">
+              <svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+            </div>
+          </div>
+        </div>
+        
+        <div class="glass-card card-hover p-6 rounded-2xl animate-fade-in" style="animation-delay: 0.2s">
+          <div class="flex items-center justify-between">
+            <div>
+              <p class="text-slate-400 text-sm font-medium">Active Volunteers</p>
+              <p class="text-3xl font-bold text-white mt-2"><%= stats.volunteers || 0 %></p>
+            </div>
+            <div class="w-14 h-14 rounded-2xl flex items-center justify-center" style="background: linear-gradient(135deg, #3b82f6, #1d4ed8);">
+              <svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+            </div>
+          </div>
+        </div>
+        
+        <div class="glass-card card-hover p-6 rounded-2xl animate-fade-in" style="animation-delay: 0.3s">
+          <div class="flex items-center justify-between">
+            <div>
+              <p class="text-slate-400 text-sm font-medium">Monthly Donations</p>
+              <p class="text-3xl font-bold text-white mt-2">$<%= Number(stats.totalDonations || 0).toLocaleString() %></p>
+            </div>
+            <div class="w-14 h-14 rounded-2xl flex items-center justify-center" style="background: linear-gradient(135deg, #10b981, #059669);">
+              <svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+            </div>
+          </div>
+          <div class="mt-4">
+            <div class="h-2 bg-slate-700 rounded-full overflow-hidden">
+              <div class="h-full rounded-full" style="width: 65%; background: linear-gradient(135deg, #10b981, #059669);"></div>
+            </div>
+            <p class="text-xs text-slate-500 mt-1">65% of monthly goal</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Middle Section -->
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+        <!-- Recent Announcements -->
+        <div class="glass-card card-hover p-6 rounded-2xl animate-slide-up">
+          <div class="flex items-center justify-between mb-6">
+            <h3 class="text-lg font-bold text-white">Recent Announcements</h3>
+            <a href="/announcements" class="text-emerald-400 text-sm font-medium hover:underline">View All</a>
+          </div>
+          <div class="space-y-4">
+            <% if (recentAnnouncements && recentAnnouncements.length > 0) { %>
+              <% recentAnnouncements.slice(0, 3).forEach(function(a) { %>
+                <div class="flex items-start gap-4 p-4 bg-slate-800/50 rounded-xl">
+                  <div class="w-10 h-10 rounded-full flex items-center justify-center text-white font-bold" style="background: linear-gradient(135deg, #10b981, #059669);">
+                    <%= a.author_name ? a.author_name.charAt(0).toUpperCase() : 'A' %>
+                  </div>
+                  <div class="flex-1">
+                    <h4 class="font-semibold text-white"><%= a.title %></h4>
+                    <p class="text-slate-400 text-sm mt-1"><%= a.body.substring(0, 80) %>...</p>
+                    <p class="text-slate-500 text-xs mt-2"><%= new Date(a.created_at).toLocaleDateString() %> by <%= a.author_name %></p>
+                  </div>
+                </div>
+              <% }); %>
+            <% } else { %>
+              <p class="text-slate-500 text-center py-8">No announcements yet.</p>
+            <% } %>
+          </div>
+        </div>
+        
+        <!-- Upcoming Events -->
+        <div class="glass-card card-hover p-6 rounded-2xl animate-slide-up" style="animation-delay: 0.1s">
+          <div class="flex items-center justify-between mb-6">
+            <h3 class="text-lg font-bold text-white">Upcoming Events</h3>
+            <a href="/events" class="text-emerald-400 text-sm font-medium hover:underline">View All</a>
+          </div>
+          <div class="space-y-4">
+            <% if (upcomingEvents && upcomingEvents.length > 0) { %>
+              <% upcomingEvents.slice(0, 3).forEach(function(e) { %>
+                <div class="flex items-center gap-4 p-4 bg-slate-800/50 rounded-xl">
+                  <div class="w-14 h-14 rounded-xl flex flex-col items-center justify-center text-white" style="background: linear-gradient(135deg, #d4af37, #b8962e);">
+                    <span class="text-lg font-bold"><%= new Date(e.event_date).getDate() %></span>
+                    <span class="text-xs"><%= new Date(e.event_date).toLocaleDateString('en-US', { month: 'short' }) %></span>
+                  </div>
+                  <div class="flex-1">
+                    <h4 class="font-semibold text-white"><%= e.title %></h4>
+                    <p class="text-slate-400 text-sm"><%= e.location || 'TBD' %></p>
+                    <div class="flex items-center gap-2 mt-2">
+                      <span class="text-xs bg-emerald-500/20 text-emerald-400 px-2 py-1 rounded-full"><%= e.volunteer_count || 0 %> volunteers</span>
+                      <span class="text-xs bg-blue-500/20 text-blue-400 px-2 py-1 rounded-full"><%= e.attendee_count || 0 %> attending</span>
+                    </div>
+                  </div>
+                </div>
+              <% }); %>
+            <% } else { %>
+              <p class="text-slate-500 text-center py-8">No upcoming events.</p>
+            <% } %>
+          </div>
+        </div>
+      </div>
+
+      <!-- Bottom Section -->
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <!-- Prayer Times -->
+        <div class="glass-card card-hover p-6 rounded-2xl">
+          <div class="flex items-center justify-between mb-6">
+            <h3 class="text-lg font-bold text-white">Prayer Times</h3>
+            <a href="/prayer-times" class="text-emerald-400 text-sm font-medium hover:underline">View All</a>
+          </div>
+          <div class="space-y-3">
+            <% if (prayerTimes && prayerTimes.length > 0) { %>
+              <% prayerTimes.forEach(function(p) { %>
+                <div class="flex items-center justify-between p-3 rounded-xl <%= nextPrayer && nextPrayer.name === p.name ? 'bg-emerald-500/20 border border-emerald-500/30' : 'bg-slate-800/50' %>">
+                  <div class="flex items-center gap-3">
+                    <span class="font-semibold text-white w-20"><%= p.name %></span>
+                    <span class="text-slate-400 text-sm">Adhan: <%= p.adhan_time %></span>
+                  </div>
+                  <div class="text-right">
+                    <span class="font-bold <%= nextPrayer && nextPrayer.name === p.name ? 'text-emerald-400' : 'text-slate-200' %>"><%= p.iqamah_time %></span>
+                    <% if (nextPrayer && nextPrayer.name === p.name) { %>
+                      <span class="ml-2 text-xs bg-emerald-500 text-white px-2 py-1 rounded-full">Next</span>
+                    <% } %>
+                  </div>
+                </div>
+              <% }); %>
+            <% } else { %>
+              <p class="text-slate-500 text-center py-4">No prayer times set.</p>
+            <% } %>
+          </div>
+        </div>
+        
+        <!-- Maintenance Tasks -->
+        <% if (role === 'admin' || role === 'khadim') { %>
+        <div class="glass-card card-hover p-6 rounded-2xl">
+          <div class="flex items-center justify-between mb-6">
+            <h3 class="text-lg font-bold text-white">Maintenance Tasks</h3>
+            <a href="/maintenance" class="text-emerald-400 text-sm font-medium hover:underline">View All</a>
+          </div>
+          <div class="space-y-4">
+            <% if (urgentTasks && urgentTasks.length > 0) { %>
+              <% urgentTasks.forEach(function(t) { %>
+                <div>
+                  <div class="flex items-center justify-between mb-2">
+                    <span class="font-medium text-white"><%= t.title %></span>
+                    <span class="text-xs px-2 py-1 rounded-full <%= t.status === 'completed' ? 'bg-emerald-500/20 text-emerald-400' : t.status === 'in_progress' ? 'bg-blue-500/20 text-blue-400' : 'bg-amber-500/20 text-amber-400' %>"><%= t.status %></span>
+                  </div>
+                  <div class="h-2 bg-slate-700 rounded-full overflow-hidden">
+                    <div class="h-full rounded-full <%= t.status === 'completed' ? 'bg-emerald-500' : t.status === 'in_progress' ? 'bg-blue-500' : 'bg-amber-500' %>" style="width: <%= t.status === 'completed' ? 100 : t.status === 'in_progress' ? 60 : 20 %>%;"></div>
+                  </div>
+                </div>
+              <% }); %>
+            <% } else { %>
+              <p class="text-slate-500 text-center py-8">No maintenance tasks.</p>
+            <% } %>
+          </div>
+        </div>
+        <% } %>
+        
+        <!-- Donations Progress -->
+        <div class="glass-card card-hover p-6 rounded-2xl">
+          <div class="flex items-center justify-between mb-6">
+            <h3 class="text-lg font-bold text-white">Donations</h3>
+            <a href="/finances" class="text-emerald-400 text-sm font-medium hover:underline">View All</a>
+          </div>
+          <div class="text-center py-4">
+            <p class="text-slate-400 text-sm">Monthly Goal</p>
+            <p class="text-4xl font-bold text-white mt-2">$<%= Number(stats.totalDonations || 0).toLocaleString() %></p>
+            <div class="mt-6">
+              <div class="h-4 bg-slate-700 rounded-full overflow-hidden">
+                <div class="h-full rounded-full" style="width: 65%; background: linear-gradient(135deg, #10b981, #059669);"></div>
+              </div>
+              <p class="text-sm text-slate-400 mt-2">65% of $10,000 goal</p>
+            </div>
+          </div>
+          <div class="mt-6 grid grid-cols-2 gap-4">
+            <div class="text-center p-3 bg-emerald-500/10 rounded-xl border border-emerald-500/20">
+              <p class="text-emerald-400 text-sm">Donations</p>
+              <p class="text-xl font-bold text-emerald-400">$<%= Number(stats.totalDonations || 0).toLocaleString() %></p>
+            </div>
+            <div class="text-center p-3 bg-red-500/10 rounded-xl border border-red-500/20">
+              <p class="text-red-400 text-sm">Expenses</p>
+              <p class="text-xl font-bold text-red-400">$<%= Number(stats.totalExpenses || 0).toLocaleString() %></p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+</body>
+</html>

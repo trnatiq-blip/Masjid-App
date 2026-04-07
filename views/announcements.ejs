@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<%- include('partials/head') %>
+<body class="min-h-screen bg-slate-900">
+  <%- include('partials/sidebar') %>
+  
+  <div class="lg:pl-64 min-h-screen">
+    <header class="glass sticky top-0 z-30 border-b border-white/10">
+      <div class="flex items-center justify-between px-4 py-4">
+        <div class="flex items-center">
+          <button onclick="toggleSidebar()" class="lg:hidden mr-4 text-slate-300 hover:text-white">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+          </button>
+          <h1 class="text-2xl font-bold text-white">Announcements</h1>
+        </div>
+        <% if (['admin', 'imam'].includes(role)) { %>
+        <button onclick="document.getElementById('add-form').classList.toggle('hidden')" class="bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-600 hover:to-emerald-700 text-white px-4 py-2 rounded-lg font-medium transition-all flex items-center shadow-lg shadow-emerald-500/25">
+          <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+          New Announcement
+        </button>
+        <% } %>
+      </div>
+    </header>
+    
+    <main class="p-4 lg:p-6">
+      <% if (['admin', 'imam'].includes(role)) { %>
+      <div id="add-form" class="hidden glass-card rounded-xl p-6 mb-6 border border-white/10 animate-slide-up">
+        <h3 class="text-lg font-semibold text-white mb-4 flex items-center">
+          <svg class="w-5 h-5 mr-2 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6M5.436 13.683A4.001 4.001 0 017 6h1.832c4.1 0 7.625-1.234 9.168-3v14c-1.543-1.766-5.067-3-9.168-3H7a3.988 3.988 0 01-1.564-.317z"/></svg>
+          Create Announcement
+        </h3>
+        <form action="/announcements" method="POST" class="space-y-4">
+          <div>
+            <input type="text" name="title" required placeholder="Title" class="w-full rounded-lg px-4 py-3 bg-slate-800/50 border border-white/10 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-emerald-500">
+          </div>
+          <div>
+            <textarea name="body" required placeholder="Content" rows="4" class="w-full rounded-lg px-4 py-3 bg-slate-800/50 border border-white/10 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-emerald-500"></textarea>
+          </div>
+          <div class="flex space-x-4">
+            <button type="submit" class="bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-600 hover:to-emerald-700 text-white px-6 py-2 rounded-lg font-medium transition-all">Publish</button>
+            <button type="button" onclick="document.getElementById('add-form').classList.add('hidden')" class="bg-slate-700 hover:bg-slate-600 text-slate-300 px-6 py-2 rounded-lg font-medium transition-colors">Cancel</button>
+          </div>
+        </form>
+      </div>
+      <% } %>
+      
+      <div class="space-y-4">
+        <% announcements.forEach(a => { %>
+          <div class="glass-card rounded-xl p-6 border border-white/10 card-hover animate-slide-up">
+            <div class="flex justify-between items-start">
+              <div class="flex-1">
+                <div class="flex items-center mb-2">
+                  <div class="w-10 h-10 rounded-lg bg-emerald-500/20 flex items-center justify-center mr-3 border border-emerald-500/30">
+                    <svg class="w-5 h-5 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6M5.436 13.683A4.001 4.001 0 017 6h1.832c4.1 0 7.625-1.234 9.168-3v14c-1.543-1.766-5.067-3-9.168-3H7a3.988 3.988 0 01-1.564-.317z"/></svg>
+                  </div>
+                  <h3 class="text-lg font-semibold text-white"><%= a.title %></h3>
+                </div>
+                <p class="text-slate-300 mt-2 ml-13"><%= a.body %></p>
+                <p class="text-slate-500 text-sm mt-3">By <%= a.author_name %> &middot; <%= new Date(a.created_at).toLocaleDateString() %></p>
+              </div>
+              <% if (['admin', 'imam'].includes(role)) { %>
+              <form action="/announcements/<%= a.id %>/delete" method="POST" onsubmit="return confirm('Delete this announcement?');">
+                <button type="submit" class="bg-red-500/20 hover:bg-red-500/30 text-red-400 px-3 py-1 rounded-lg text-sm font-medium transition-colors flex items-center border border-red-500/30">
+                  <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+                  Delete
+                </button>
+              </form>
+              <% } %>
+            </div>
+          </div>
+        <% }) %>
+        <% if (announcements.length === 0) { %>
+          <div class="glass-card rounded-xl p-8 text-center border border-white/10">
+            <svg class="w-12 h-12 mx-auto text-slate-600 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6M5.436 13.683A4.001 4.001 0 017 6h1.832c4.1 0 7.625-1.234 9.168-3v14c-1.543-1.766-5.067-3-9.168-3H7a3.988 3.988 0 01-1.564-.317z"/></svg>
+            <p class="text-slate-400">No announcements yet.</p>
+          </div>
+        <% } %>
+      </div>
+    </main>
+  </div>
+</body>
+</html>

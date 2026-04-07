@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<%- include('partials/head') %>
+<body class="min-h-screen bg-slate-900">
+  <%- include('partials/sidebar') %>
+  
+  <div class="lg:pl-64 min-h-screen">
+    <header class="glass sticky top-0 z-30 border-b border-white/10">
+      <div class="flex items-center justify-between px-4 py-4">
+        <div class="flex items-center">
+          <button onclick="toggleSidebar()" class="lg:hidden mr-4 text-slate-300 hover:text-white">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+          </button>
+          <h1 class="text-2xl font-bold text-white">Settings</h1>
+        </div>
+      </div>
+    </header>
+    
+    <main class="p-4 lg:p-6">
+      <div class="glass-card rounded-xl p-6 border border-white/10 animate-slide-up">
+        <h3 class="text-lg font-semibold text-white mb-6 flex items-center">
+          <svg class="w-5 h-5 mr-2 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+          General Settings
+        </h3>
+        
+        <form action="/settings" method="POST" class="space-y-6">
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+              <label class="block text-slate-300 text-sm font-medium mb-2">App Name</label>
+              <input type="text" name="app_name" value="<%= settings.app_name || '' %>" class="w-full rounded-lg px-4 py-3 bg-slate-800/50 border border-white/10 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-emerald-500">
+            </div>
+            
+            <div>
+              <label class="block text-slate-300 text-sm font-medium mb-2">Logo URL</label>
+              <input type="text" name="app_logo" value="<%= settings.app_logo || '' %>" class="w-full rounded-lg px-4 py-3 bg-slate-800/50 border border-white/10 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-emerald-500">
+            </div>
+            
+            <div>
+              <label class="block text-slate-300 text-sm font-medium mb-2">Prayer Time Calculation Method</label>
+              <select name="prayer_method" class="w-full rounded-lg px-4 py-3 bg-slate-800/50 border border-white/10 text-white focus:outline-none focus:ring-2 focus:ring-emerald-500">
+                <option value="ISNA" <%= settings.prayer_method === 'ISNA' ? 'selected' : '' %>>ISNA (Islamic Society of North America)</option>
+                <option value="MWL" <%= settings.prayer_method === 'MWL' ? 'selected' : '' %>>MWL (Muslim World League)</option>
+                <option value="Egypt" <%= settings.prayer_method === 'Egypt' ? 'selected' : '' %>>Egyptian General Authority</option>
+                <option value="Makkah" <%= settings.prayer_method === 'Makkah' ? 'selected' : '' %>>Umm Al-Qura University, Makkah</option>
+                <option value="Karachi" <%= settings.prayer_method === 'Karachi' ? 'selected' : '' %>>Karachi (University of Islamic Sciences)</option>
+              </select>
+            </div>
+            
+            <div>
+              <label class="block text-slate-300 text-sm font-medium mb-2">Timezone</label>
+              <select name="timezone" class="w-full rounded-lg px-4 py-3 bg-slate-800/50 border border-white/10 text-white focus:outline-none focus:ring-2 focus:ring-emerald-500">
+                <option value="America/New_York" <%= settings.timezone === 'America/New_York' ? 'selected' : '' %>>Eastern Time (ET)</option>
+                <option value="America/Chicago" <%= settings.timezone === 'America/Chicago' ? 'selected' : '' %>>Central Time (CT)</option>
+                <option value="America/Denver" <%= settings.timezone === 'America/Denver' ? 'selected' : '' %>>Mountain Time (MT)</option>
+                <option value="America/Los_Angeles" <%= settings.timezone === 'America/Los_Angeles' ? 'selected' : '' %>>Pacific Time (PT)</option>
+                <option value="Europe/London" <%= settings.timezone === 'Europe/London' ? 'selected' : '' %>>London (GMT)</option>
+                <option value="Asia/Dubai" <%= settings.timezone === 'Asia/Dubai' ? 'selected' : '' %>>Dubai (GST)</option>
+              </select>
+            </div>
+            
+            <div>
+              <label class="block text-slate-300 text-sm font-medium mb-2">Contact Email</label>
+              <input type="email" name="contact_email" value="<%= settings.contact_email || '' %>" class="w-full rounded-lg px-4 py-3 bg-slate-800/50 border border-white/10 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-emerald-500">
+            </div>
+            
+            <div>
+              <label class="block text-slate-300 text-sm font-medium mb-2">Contact Phone</label>
+              <input type="text" name="contact_phone" value="<%= settings.contact_phone || '' %>" class="w-full rounded-lg px-4 py-3 bg-slate-800/50 border border-white/10 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-emerald-500">
+            </div>
+            
+            <div class="md:col-span-2">
+              <label class="block text-slate-300 text-sm font-medium mb-2">Address</label>
+              <textarea name="address" rows="2" class="w-full rounded-lg px-4 py-3 bg-slate-800/50 border border-white/10 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-emerald-500"><%= settings.address || '' %></textarea>
+            </div>
+            
+            <div>
+              <label class="block text-slate-300 text-sm font-medium mb-2">Currency</label>
+              <select name="currency" class="w-full rounded-lg px-4 py-3 bg-slate-800/50 border border-white/10 text-white focus:outline-none focus:ring-2 focus:ring-emerald-500">
+                <option value="USD" <%= settings.currency === 'USD' ? 'selected' : '' %>>USD - US Dollar</option>
+                <option value="EUR" <%= settings.currency === 'EUR' ? 'selected' : '' %>>EUR - Euro</option>
+                <option value="GBP" <%= settings.currency === 'GBP' ? 'selected' : '' %>>GBP - British Pound</option>
+                <option value="SAR" <%= settings.currency === 'SAR' ? 'selected' : '' %>>SAR - Saudi Riyal</option>
+                <option value="AED" <%= settings.currency === 'AED' ? 'selected' : '' %>>AED - UAE Dirham</option>
+                <option value="CAD" <%= settings.currency === 'CAD' ? 'selected' : '' %>>CAD - Canadian Dollar</option>
+              </select>
+            </div>
+            
+            <div>
+              <label class="block text-slate-300 text-sm font-medium mb-2">Monthly Donation Goal</label>
+              <input type="number" name="donation_goal" value="<%= settings.donation_goal || '' %>" min="0" step="100" class="w-full rounded-lg px-4 py-3 bg-slate-800/50 border border-white/10 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-emerald-500">
+            </div>
+          </div>
+          
+          <% if (canEdit) { %>
+          <div class="pt-4 border-t border-white/10">
+            <button type="submit" class="bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-600 hover:to-emerald-700 text-white px-6 py-2 rounded-lg font-medium transition-all">
+              Save Settings
+            </button>
+          </div>
+          <% } %>
+        </form>
+      </div>
+      
+      <div class="mt-6 glass-card rounded-xl p-6 border border-white/10 animate-slide-up">
+        <h3 class="text-lg font-semibold text-white mb-4 flex items-center">
+          <svg class="w-5 h-5 mr-2 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          Contact Information
+        </h3>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div class="p-4 bg-slate-800/30 rounded-lg">
+            <p class="text-slate-400 text-sm">Email</p>
+            <p class="text-white font-medium"><%= settings.contact_email || 'Not set' %></p>
+          </div>
+          <div class="p-4 bg-slate-800/30 rounded-lg">
+            <p class="text-slate-400 text-sm">Phone</p>
+            <p class="text-white font-medium"><%= settings.contact_phone || 'Not set' %></p>
+          </div>
+          <div class="p-4 bg-slate-800/30 rounded-lg">
+            <p class="text-slate-400 text-sm">Address</p>
+            <p class="text-white font-medium text-sm"><%= settings.address || 'Not set' %></p>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+</body>
+</html>
