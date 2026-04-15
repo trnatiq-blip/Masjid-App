@@ -1,3 +1,4 @@
+<div id="sidebar-backdrop" onclick="toggleSidebar()" class="fixed inset-0 bg-black/50 z-40 lg:hidden hidden"></div>
 <div id="sidebar" class="fixed inset-y-0 left-0 z-50 w-64 sidebar shadow-2xl transform -translate-x-full lg:translate-x-0 transition-transform duration-300 ease-in-out">
   <div class="h-full flex flex-col">
     <div class="flex items-center justify-center h-20 border-b border-white/10">
@@ -116,6 +117,11 @@
 
 <script>
   function toggleSidebar() {
-    document.getElementById('sidebar').classList.toggle('-translate-x-full');
+    const sidebar = document.getElementById('sidebar');
+    const backdrop = document.getElementById('sidebar-backdrop');
+    sidebar.classList.toggle('-translate-x-full');
+    if (backdrop) {
+      backdrop.classList.toggle('hidden');
+    }
   }
 </script>
